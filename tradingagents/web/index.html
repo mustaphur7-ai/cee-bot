@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0f14"><title>Cee Bot · Paper Terminal</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="https://unpkg.com/lightweight-charts@4.2.2/dist/lightweight-charts.standalone.production.js" defer></script>
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/"><span class="brand-mark">C</span><span>cee<span class="brand-light">bot</span><small>PAPER TERMINAL</small></span></a>
+    <div class="safety"><i></i> PAPER MODE <span>·</span> NO LIVE BROKER</div>
+    <div class="top-actions"><span class="connection"><i></i><b id="connection-label">Connecting</b></span><button id="refresh-button" class="icon-button" title="Refresh">↻</button></div>
+  </header>
+  <main class="layout">
+    <section class="main-column">
+      <div class="market-heading panel">
+        <div><label class="eyebrow">MARKET VIEW · INDICATIVE DATA</label><div class="instrument"><select id="symbol-select" aria-label="Market symbol"></select><span id="market-type" class="pill">—</span></div></div>
+        <div class="quote"><strong id="last-price">—</strong><span id="price-change">—</span><small id="data-source">Loading market snapshot…</small></div>
+      </div>
+      <section class="panel chart-panel">
+        <div class="section-heading"><div><h2>Price action</h2><span class="muted">Candles · simulated/available market data</span></div><div class="timeframes" id="timeframes"><button class="active" data-timeframe="1m">1m</button><button data-timeframe="5m">5m</button><button data-timeframe="15m">15m</button><button data-timeframe="1h">1h</button><button data-timeframe="1d">1d</button></div></div>
+        <div class="chart-wrap"><div id="price-chart" aria-label="Interactive candlestick price chart"></div><div id="chart-message" class="chart-message">Loading chart…</div></div>
+        <div class="legend"><span><i class="dot entry"></i>Entry</span><span><i class="dot stop"></i>Stop loss</span><span><i class="dot target"></i>Take profit</span><span class="muted">Levels appear after an analysis step</span></div>
+      </section>
+      <div class="lower-grid">
+        <section class="panel depth-panel"><div class="section-heading"><div><h2>Market depth snapshot</h2><span class="muted">Illustrative only · not an exchange order book</span></div><span class="spread-label">Spread <b id="spread">—</b></span></div><div class="depth-head"><span>PRICE</span><span>SIZE</span></div><div id="depth-rows" class="depth-rows"></div></section>
+        <section class="panel fills-panel"><div class="section-heading"><div><h2>Paper fills & positions</h2><span class="muted">Persisted local engine state</span></div><span class="count-badge" id="position-count">0</span></div><div id="positions-list" class="positions-list"></div></section>
+      </div>
+    </section>
+    <aside class="side-column">
+      <section class="panel decision-panel"><div class="section-heading"><div><label class="eyebrow">AGENT RUN</label><h2>Decision pipeline</h2></div><span class="run-indicator"><i></i> READY</span></div><p class="muted helper">Run one analysis cycle. Any resulting order is simulated locally only.</p><button id="run-button" class="primary-button">▶ &nbsp; Run paper analysis</button><div id="decision-card" class="decision-card empty">No recent decision. Start a paper analysis.</div><div id="agent-list" class="agent-list"></div></section>
+      <section class="panel activity-panel"><div class="section-heading"><div><h2>Agent activity</h2><span class="muted">Polling local run state</span></div><span class="live-badge"><i></i> LIVE</span></div><div id="activity-list" class="activity-list"></div></section>
+      <section class="panel log-panel"><div class="section-heading"><div><h2>Execution log</h2><span class="muted">Paper orders only</span></div></div><div id="log-list" class="log-list"></div></section>
+    </aside>
+  </main>
+  <footer><span>Educational paper-trading software. Not financial advice.</span><span id="footer-stats">pnl +0.0% paper · trades 0 · avg -- · latency --</span></footer>
+</body>
+</html>

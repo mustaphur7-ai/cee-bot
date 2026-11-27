@@ -4,21 +4,25 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cee-bot"
-version = "1.0.0"
+version = "1.1.0"
 description = "Educational multi-agent paper-trading simulator; never connects to a broker."
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "Apache-2.0"}
-dependencies = ["rich>=13.7,<15", "python-dotenv>=1.0,<2", "numpy>=1.26,<3", "matplotlib>=3.8,<4", "yfinance>=0.2.40,<2"]
+dependencies = ["rich>=13.7,<15", "python-dotenv>=1.0,<2", "numpy>=1.26,<3", "matplotlib>=3.8,<4", "yfinance>=0.2.40,<2", "fastapi>=0.110,<1", "uvicorn[standard]>=0.29,<1"]
 
 [project.optional-dependencies]
-dev = ["pytest>=8,<9"]
+dev = ["pytest>=8,<9", "httpx>=0.27,<1"]
 
 [project.scripts]
 cee-bot = "cli.main:main"
+cee-bot-web = "uvicorn tradingagents.web:app --factory=false"
 
 [tool.setuptools.packages.find]
 include = ["cli*", "tradingagents*"]
+
+[tool.setuptools.package-data]
+tradingagents = ["web/*.html", "web/*.css", "web/*.js"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

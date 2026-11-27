@@ -4,6 +4,7 @@ from __future__ import annotations
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
 from tradingagents.indicators.core import position_size
 from tradingagents.models import Signal, Trade, TradeStats
@@ -63,8 +64,17 @@ class PaperEngine:
         return Trade(row["id"], row["symbol"], row["side"], row["entry"], row["stop_loss"], row["tp1"], row["tp2"], row["quantity"], row["remaining_quantity"], row["status"], row["realized_pnl"], row["opened_at"])
 
     def open_positions(self) -> list[Trade]:
+        """Return currently open local paper positions."""
         with self._connect() as db:
             return [self._trade(row) for row in db.execute("SELECT * FROM trades WHERE status='open' ORDER BY id")]
+
+    def recent_event_records(self, limit: int = 20) -> list[dict[str, Any]]:
+        """Return timestamped recent paper-order events for dashboard consumers."""
+        if limit < 1:
+            return []
+        with self._connect() as db:
+            rows = db.execute("SELECT timestamp,message,trade_id FROM events ORDER BY id DESC LIMIT ?", (min(limit, 500),)).fetchall()
+            return [{"timestamp": row["timestamp"], "message": row["message"], "trade_id": row["trade_id"]} for row in reversed(rows)]
 
     def update_price(self, symbol: str, price: float) -> list[str]:
         """Advance open paper positions against a price; TP1 realizes half and moves SL to entry."""
@@ -102,8 +112,8 @@ class PaperEngine:
         return messages
 
     def recent_events(self, limit: int = 20) -> list[str]:
-        with self._connect() as db:
-            return [r[0] for r in db.execute("SELECT message FROM events ORDER BY id DESC LIMIT ?", (limit,)).fetchall()][::-1]
+        """Return event messages, preserving the original CLI interface."""
+        return [row["message"] for row in self.recent_event_records(limit)]
 
     def stats(self) -> TradeStats:
         with self._connect() as db:
